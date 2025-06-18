@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Die Herausforderung</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      color: #222;
+    }
+    .riddle {
+      background: white;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin: 0.5rem 0 0.2rem;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.7rem 1.2rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    #qrCode {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Die Ultimative Herausforderung</h1>
+  <div class="riddle">
+    <p><strong>Rätsel 1:</strong> Wie viele Jahre seid ihr bereits befreundet?</p>
+    <label for="riddle1">Antwort:</label>
+    <input type="text" id="riddle1" />
+  </div>
+
+  <div class="riddle">
+    <p><strong>Rätsel 2:</strong> 🍺 + 🍺 + 🍕 = ? (Wenn Bier = 2, Pizza = 1)</p>
+    <label for="riddle2">Antwort:</label>
+    <input type="text" id="riddle2" />
+  </div>
+
+  <div class="riddle">
+    <p><strong>Rätsel 3:</strong> In welcher Stadt hat er am meisten gefeiert?</p>
+    <label for="riddle3">Antwort:</label>
+    <input type="text" id="riddle3" />
+  </div>
+
+  <button onclick="checkAnswers()">Überprüfen</button>
+
+  <div id="result" class="hidden">
+    <h2>🎉 Glückwunsch!</h2>
+    <p>Du hast alle Rätsel richtig gelöst.</p>
+    <div id="qrCode">
+      <p>Scanne diesen QR-Code, um dem Geheimbund beizutreten:</p>
+      <img src="DEIN_QR_CODE_BILDLINK_HIER" alt="QR Code" width="200" />
+    </div>
+  </div>
+
+  <script>
+    function checkAnswers() {
+      const r1 = document.getElementById("riddle1").value.trim();
+      const r2 = document.getElementById("riddle2").value.trim();
+      const r3 = document.getElementById("riddle3").value.trim().toLowerCase();
+
+      // <- Passe hier die richtigen Antworten an
+      const correctR1 = "10";
+      const correctR2 = "5";
+      const correctR3 = "köln";
+
+      if (r1 === correctR1 && r2 === correctR2 && r3 === correctR3) {
+        document.getElementById("result").classList.remove("hidden");
+      } else {
+        alert("Noch nicht ganz richtig... versuch es nochmal!");
+      }
+    }
+  </script>
+</body>
+</html>
