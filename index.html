@@ -48,7 +48,7 @@
 <body>
   <h1>Scanne den QR Code</h1>
   <div id="puzzle"></div>
-  <div id="complete-image" style="display: none; margin-top: 20px;">
+  <div id="krkg" style="display: none; margin-top: 20px;">
     <img src="kuherkot.jpg" alt="Puzzle gelöst!" width="300" height="300" style="border: 2px solid #444; border-radius: 5px;">
   </div>
   <script>
@@ -138,7 +138,7 @@
         if (isSolved()) {
 			setTimeout(() => {
 				alert("Gut gemacht du Wunderpracht!");
-				document.getElementById("complete-image").style.display = "block";
+				document.getElementById("krkg").style.display = "block";
 			}, 100);
 		}
 
