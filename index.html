@@ -49,10 +49,9 @@
   <h1>Machs mal richtig</h1>
   <div id="puzzle"></div>
   <div id="krkg" style="display: none; margin-top: 20px;">
-    <img src="krk.jpg" alt="Puzzle gelöst!" width="500" height="500" style="border: 2px solid #444; border-radius: 5px;">
   </div>
   <script>
-    const size = 5;
+    const size = 3;
     let tiles = Array.from({ length: size * size }, (v, i) => i);
 
     function shuffle(array) {
@@ -136,12 +135,21 @@
         swap(clickedIndex, emptyIndex);
         render();
         if (isSolved()) {
-			setTimeout(() => {
-				alert("Gut gemacht du Wunderpracht!");
-				document.getElementById("krkg").style.display = "block";
-			}, 100);
-		}
+		  setTimeout(() => {
+			alert("Gut gemacht du Wunderpracht!");
 
+			const img = document.createElement("img");
+			img.src = "krk.jpg";
+			img.alt = "Gut gemacht du Wunderpracht!";
+			img.width = 500;
+			img.height = 500;
+			img.style.border = "2px solid #444";
+			img.style.borderRadius = "5px";
+
+			document.getElementById("krkg").appendChild(img);
+			document.getElementById("krkg").style.display = "block";
+		  }, 100);
+		}
       }
     });
 
