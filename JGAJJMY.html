@@ -1,106 +1,141 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Die Herausforderung</title>
+  <meta charset="UTF-8">
+  <title>Scanne den QR-Code</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+      background: #f4f4f4;
     }
     h1 {
-      color: #222;
+      margin-bottom: 10px;
     }
-    .riddle {
-      background: white;
-      padding: 1.5rem;
-      margin: 1rem 0;
-      border-radius: 10px;
-      width: 100%;
-      max-width: 600px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    #puzzle {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin: 20px auto;
+      width: 320px;
     }
-    label {
-      display: block;
-      margin: 0.5rem 0 0.2rem;
-    }
-    input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 1rem;
-      padding: 0.7rem 1.2rem;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-    #qrCode {
-      margin-top: 2rem;
-    }
+	.tile {
+	  width: 100px;
+	  height: 100px;
+	  position: relative;
+	  font-size: 1.8em;
+	  font-weight: bold;
+	  color: black;
+	  -webkit-text-stroke: 1.5px white;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	  cursor: pointer;
+	  border-radius: 5px;
+	  background-repeat: no-repeat;
+	  background-size: 300px 300px;
+	}
+	.empty {
+	  background: #ccc;
+	  cursor: default;
+	}
   </style>
 </head>
 <body>
-  <h1>Die Ultimative Herausforderung</h1>
-  <div class="riddle">
-    <p><strong>Rätsel 1:</strong> Wie viele Jahre seid ihr bereits befreundet?</p>
-    <label for="riddle1">Antwort:</label>
-    <input type="text" id="riddle1" />
+  <h1>Scanne den QR-Code</h1>
+  <div id="puzzle"></div>
+  <div id="complete-image" style="display: none; margin-top: 20px;">
+    <img src="puzzlebild.jpg" alt="Puzzle gelöst!" width="300" height="300" style="border: 2px solid #444; border-radius: 5px;">
   </div>
-
-  <div class="riddle">
-    <p><strong>Rätsel 2:</strong> 🍺 + 🍺 + 🍕 = ? (Wenn Bier = 2, Pizza = 1)</p>
-    <label for="riddle2">Antwort:</label>
-    <input type="text" id="riddle2" />
-  </div>
-
-  <div class="riddle">
-    <p><strong>Rätsel 3:</strong> In welcher Stadt hat er am meisten gefeiert?</p>
-    <label for="riddle3">Antwort:</label>
-    <input type="text" id="riddle3" />
-  </div>
-
-  <button onclick="checkAnswers()">Überprüfen</button>
-
-  <div id="result" class="hidden">
-    <h2>🎉 Glückwunsch!</h2>
-    <p>Du hast alle Rätsel richtig gelöst.</p>
-    <div id="qrCode">
-      <p>Scanne diesen QR-Code, um dem Geheimbund beizutreten:</p>
-      <img src="DEIN_QR_CODE_BILDLINK_HIER" alt="QR Code" width="200" />
-    </div>
-  </div>
-
   <script>
-    function checkAnswers() {
-      const r1 = document.getElementById("riddle1").value.trim();
-      const r2 = document.getElementById("riddle2").value.trim();
-      const r3 = document.getElementById("riddle3").value.trim().toLowerCase();
-
-      // <- Passe hier die richtigen Antworten an
-      const correctR1 = "10";
-      const correctR2 = "5";
-      const correctR3 = "köln";
-
-      if (r1 === correctR1 && r2 === correctR2 && r3 === correctR3) {
-        document.getElementById("result").classList.remove("hidden");
-      } else {
-        alert("Noch nicht ganz richtig... versuch es nochmal!");
+    const size = 3;
+    let tiles = Array.from({ length: size * size }, (v, i) => i);
+    
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
     }
+    
+    function isSolvable(arr) {
+      let inversions = 0;
+      let flatArr = arr.filter(num => num !== 0);
+      for (let i = 0; i < flatArr.length; i++) {
+        for (let j = i + 1; j < flatArr.length; j++) {
+          if (flatArr[i] > flatArr[j]) inversions++;
+        }
+      }
+      return inversions % 2 === 0;
+    }
+    
+    function isSolved() {
+      for (let i = 0; i < tiles.length - 1; i++) {
+        if (tiles[i] !== i + 1) return false;
+      }
+      return tiles[tiles.length - 1] === 0;
+    }
+    
+    do {
+      shuffle(tiles);
+    } while (!isSolvable(tiles) || isSolved());
+
+    const puzzleDiv = document.getElementById("puzzle");
+
+    function render() {
+      puzzleDiv.innerHTML = "";
+      tiles.forEach((tile, index) => {
+      const tileDiv = document.createElement("div");
+      tileDiv.classList.add("tile");
+      tileDiv.setAttribute("data-index", index);
+      if (tile === 0) {
+        tileDiv.classList.add("empty");
+        tileDiv.style.backgroundImage = "none";
+        tileDiv.innerText = "";
+      } else {
+        const row = Math.floor((tile - 1) / size);
+        const col = (tile - 1) % size;
+        tileDiv.style.backgroundImage = "url('puzzlebild.jpg')";
+        tileDiv.style.backgroundSize = `${size * 100}px ${size * 100}px`;
+        tileDiv.style.backgroundPosition = `-${col * 100}px -${row * 100}px`;
+        tileDiv.innerText = tile;
+      }
+      puzzleDiv.appendChild(tileDiv);
+      });
+    }
+    
+    function indexToPos(index) {
+      return { row: Math.floor(index / size), col: index % size };
+    }
+
+    function swap(i, j) {
+      [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+    }
+
+    puzzleDiv.addEventListener("click", function(e) {
+      if (!e.target.classList.contains("tile")) return;
+      const clickedIndex = parseInt(e.target.getAttribute("data-index"));
+      const emptyIndex = tiles.indexOf(0);
+      const clickedPos = indexToPos(clickedIndex);
+      const emptyPos = indexToPos(emptyIndex);
+      if (
+        (clickedPos.row === emptyPos.row && Math.abs(clickedPos.col - emptyPos.col) === 1) ||
+        (clickedPos.col === emptyPos.col && Math.abs(clickedPos.row - emptyPos.row) === 1)
+      ) {
+        swap(clickedIndex, emptyIndex);
+        render();
+        if (isSolved()) {
+          setTimeout(() => {
+            alert("Glückwunsch, du hast das Puzzle gelöst!");
+            document.getElementById("complete-image").style.display = "block";
+          }, 100);
+        }
+
+      }
+    });
+    render();
   </script>
 </body>
 </html>
