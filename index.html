@@ -133,16 +133,17 @@
         (clickedPos.row === emptyPos.row && Math.abs(clickedPos.col - emptyPos.col) === 1) ||
         (clickedPos.col === emptyPos.col && Math.abs(clickedPos.row - emptyPos.row) === 1)
       ) {
-	swap(clickedIndex, emptyIndex);
-	render();
-	if (isSolved()) {
-		setTimeout(() => {
-			alert("Glückwunsch, du hast das Puzzle gelöst!");
-			document.getElementById("complete-image").style.display = "block";
-		}, 100);
-	}
-	}
-	});
+        swap(clickedIndex, emptyIndex);
+        render();
+        if (isSolved()) {
+			setTimeout(() => {
+				alert("Glückwunsch, du hast das Puzzle gelöst!");
+				document.getElementById("complete-image").style.display = "block";
+			}, 100);
+		}
+
+      }
+    });
 
     render();
   </script>
